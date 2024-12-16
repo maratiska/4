@@ -1,0 +1,73 @@
+import java.util.List;
+import java.util.Scanner;
+
+class Box<T> {
+    private T item;
+
+    public void put(T item) throws IllegalStateException {
+        if (this.item != null) {
+            throw new IllegalStateException("Коробка уже заполнена!");
+        }
+        this.item = item;
+    }
+
+    public T get() {
+        T temp = item;
+        item = null;
+        return temp;
+    }
+
+    public boolean isFull() {
+        return item != null;
+    }
+
+    public T peek() {
+        return item;
+    }
+}
+
+public class Main {
+    public static double findMaxValue(List<Box<? extends Number>> boxes) {
+        double maxValue = Double.NEGATIVE_INFINITY;
+
+        for (Box<? extends Number> box : boxes) {
+            if (box.isFull()) {
+                double value = box.peek().doubleValue(); 
+                if (value > maxValue) {
+                    maxValue = value;
+                }
+            }
+        }
+
+        return maxValue;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        Box<Integer> integerBox = new Box<>();
+        Box<Double> doubleBox = new Box<>();
+        Box<Float> floatBox = new Box<>();
+
+        try {
+
+            System.out.println("Введите целое число для первой коробки:");
+            integerBox.put(scanner.nextInt());
+
+            System.out.println("Введите число для второй коробки:");
+            doubleBox.put(scanner.nextDouble());
+
+            System.out.println("Введите число для третьей коробки:");
+            floatBox.put(scanner.nextFloat());
+        } catch (IllegalStateException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+
+        List<Box<? extends Number>> boxes = List.of(integerBox, doubleBox, floatBox);
+
+        double maxValue = findMaxValue(boxes);
+        System.out.println("Максимальное значение среди всех коробок: " + maxValue);
+
+        scanner.close();
+    }
+}
