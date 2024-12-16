@@ -1,0 +1,50 @@
+import java.util.Scanner;
+
+class Box<T> {
+    private T item;
+
+    public void put(T item) throws IllegalStateException {
+        if (this.item != null) {
+            throw new IllegalStateException("Коробка уже заполнена! Освободите её перед добавлением нового объекта.");
+        }
+        this.item = item;
+    }
+
+    public T get() {
+        T temp = item;
+        item = null;
+        return temp;
+    }
+
+    public boolean isFull() {
+        return item != null;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Box<Integer> integerBox = new Box<>();
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите целое число для размещения в коробке:");
+        int input = scanner.nextInt();
+
+        try {
+
+            integerBox.put(input);
+            System.out.println("Число " + input + " успешно помещено в коробку.");
+        } catch (IllegalStateException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+
+        if (integerBox.isFull()) {
+            Integer extractedValue = integerBox.get();
+            System.out.println("Значение, извлеченное из коробки: " + extractedValue);
+        } else {
+            System.out.println("Коробка пуста!");
+        }
+
+        scanner.close();
+    }
+}
