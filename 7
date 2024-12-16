@@ -1,0 +1,64 @@
+
+import java.util.*;
+import java.util.function.*;
+public class Main {
+    public static <T, P> Collection<P> collect(
+            List<T> list,
+            Supplier<Collection<P>> collectionSupplier,
+            BiConsumer<Collection<P>, T> accumulator
+    ) {
+        Collection<P> result = collectionSupplier.get();
+        for (T item : list) {
+
+            accumulator.accept(result, item);
+        }
+        return result;
+    }
+    public static void main(String[] args) {
+        List<Integer> numbers = List.of(1, -3, 7);
+        Collection<List<Integer>> separated = collect(
+                numbers,
+                ArrayList::new,
+                (result, item) -> {
+                    if (item > 0) {
+                        if (result.isEmpty()) result.add(new ArrayList<>());
+                        result.iterator().next().add(item);
+                    } else {
+                        if (result.size() < 2) result.add(new ArrayList<>());
+                        List<Integer> negativeList = (List<Integer>) result.toArray()[1];
+                        negativeList.add(item);
+                    }
+                }
+        );
+        System.out.println("Разделённые числа: " + separated);
+        List<String> strings = List.of("qwerty", "asdfg", "zx", "qw");
+        Collection<List<String>> groupsByLength = collect(
+                strings,
+                ArrayList::new,
+                (result, element) -> {
+                    int length = element.length();
+                    boolean added = false;
+                    for (List<String> group : result) {
+                        if (!group.isEmpty() && group.get(0).length() == length) {
+                            group.add(element);
+                            added = true;
+                            break;
+                        }
+                    }
+                    if (!added) {
+                        List<String> newGroup = new ArrayList<>();
+                        newGroup.add(element);
+                        result.add(newGroup);
+                    }
+                }
+        );
+        System.out.println("Группы по длине: " + groupsByLength);
+        List<String> duplicates = List.of("qwerty", "asdfg", "qwerty", "qw");
+        Collection<String> uniqueSet = collect(
+                duplicates,
+                HashSet::new,
+                (result, item) -> result.add(item)
+        );
+        System.out.println("Уникальный набор: " + uniqueSet);
+    }
+}
