@@ -1,0 +1,47 @@
+import java.util.Scanner;
+
+interface Comparable<T> {
+    int compare(T other);
+}
+
+class gg implements Comparable<gg> {
+    private int value;
+
+    public gg(int value) {
+        this.value = value;
+    }
+
+    public int compare(gg other) {
+        return Integer.compare(this.value, other.value);
+    }
+
+    public String toString() {
+        return String.valueOf(value);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Введите первое целое число:");
+        int firstValue = scanner.nextInt();
+        gg firstComparable = new gg(firstValue);
+
+        System.out.println("Введите второе целое число:");
+        int secondValue = scanner.nextInt();
+        gg secondComparable = new gg(secondValue);
+
+        int comparisonResult = firstComparable.compare(secondComparable);
+
+        if (comparisonResult > 0) {
+            System.out.println("Первое число больше второго. " + firstValue + " > " + secondValue );
+        } else if (comparisonResult < 0) {
+            System.out.println("Первое число меньше второго. " + firstValue + " < " + secondValue);
+        } else {
+            System.out.println("Оба числа равны. " + firstValue + " = " + secondValue);
+        }
+
+        scanner.close();
+    }
+}
